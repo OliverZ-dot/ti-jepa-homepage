@@ -2,7 +2,6 @@ const I18N = {
   en: {
     navCase: "A real case",
     navExp: "Experiments",
-    navReal: "Real benchmarks",
     navFuture: "What follows",
     lang: "中文",
     kicker: "TI-JEPA · world models",
@@ -17,13 +16,12 @@ const I18N = {
     caseSub: "This is one pair from the trained Pendulum models, the same construction as the paper’s kill experiment. At the first step the two renderings match. The memoryless model then emits one rollout for both. TI-JEPA follows the two directions the physics actually takes.",
     expKicker: "02 · Every environment",
     expTitle: "The same test, three physical systems.",
-    expSub: "Choose an environment. Each player is another real pair from that environment’s trained models: ground truth, the memoryless baseline, and TI-JEPA.",
-    realKicker: "03 · Two real benchmarks",
-    realTitle: "Nobody built these for this paper.",
-    realSub: "InertiaBall, Pendulum, and CartPole are built so velocity isn’t optional. PushT and Reacher are real benchmarks that already have official pretrained checkpoints. We retrained the memoryless baseline and TI-JEPA on real pixels from both, same budget, and reran the exact same kill experiment.",
-    pushtCap: "Real pymunk physics, real pixels. The memoryless baseline sits flat at exactly zero branch separation, as Corollary 1 guarantees. TI-JEPA, still memoryless, reaches 0.65 velocity-sign accuracy against 0.50 for a baseline given three times the history.",
-    reacherCap: "Trained from scratch at official ViT-Tiny + AdaLN scale on real dm_control Reacher photographs. TI-JEPA’s branch separation grows past ground truth; the equally-memoryless baseline never leaves the floor. 2.17 vs 0.057 — 38×, the largest margin in the paper.",
-    futKicker: "04 · What this changes",
+    expSub: "Choose an environment. Each player is another real pair from that environment’s trained models: ground truth, the memoryless baseline, and TI-JEPA. The last two are real official benchmarks, retrained on real pixels, not built for this paper.",
+    pushtTitle: "Real PushT, retrained on real pixels.",
+    pushtCap: "Real pymunk physics, real pixels, both arms equally memoryless. The baseline sits flat at exactly zero branch separation, as Corollary 1 guarantees. TI-JEPA reaches 0.65 velocity-sign accuracy against 0.50 — a visible split in a comparison with no memory advantage on either side.",
+    reacherTitle: "Real dm_control Reacher, official scale.",
+    reacherCap: "Trained from scratch at official ViT-Tiny + AdaLN scale on real Reacher photographs. TI-JEPA’s branch separation grows past ground truth; a baseline given three times the history still never leaves the floor. 2.17 vs 0.057 — 38×, the largest margin in the paper.",
+    futKicker: "03 · What this changes",
     futTitle: "A world model can be asked to stop.",
     f1t: "The target is the state",
     f1b: "Whatever the loss predicts is what later planning is allowed to know. A next-frame embedding leaves velocity outside that state. Pose and motion, predicted together, put it back in.",
@@ -51,7 +49,6 @@ const I18N = {
   zh: {
     navCase: "真实例子",
     navExp: "每个实验",
-    navReal: "真实基准测试",
     navFuture: "往后",
     lang: "English",
     kicker: "TI-JEPA · 世界模型",
@@ -66,13 +63,12 @@ const I18N = {
     caseSub: "这是训练好的 Pendulum 模型上的一对样本，构造和论文里的 kill experiment 相同。第一步两幅渲染完全一样。无记忆模型随后对两边给出同一条 rollout。TI-JEPA 跟着物理真正走的两个方向。",
     expKicker: "02 · 每个环境",
     expTitle: "同一个检验，三套物理系统。",
-    expSub: "选一个环境。每个播放器都是该环境已训练模型上的另一对真实样本：真实轨迹、无记忆基线、TI-JEPA。",
-    realKicker: "03 · 两个真实基准测试",
-    realTitle: "这两个不是为这篇论文搭的。",
-    realSub: "InertiaBall、Pendulum、CartPole 是特意设计成速度不可或缺的环境。PushT 和 Reacher 是已经有官方预训练权重的真实基准测试。我们在两者的真实像素上，用同样的预算重新训练了无记忆基线和 TI-JEPA，跑了完全相同的 kill experiment。",
-    pushtCap: "真实 pymunk 物理，真实像素。无记忆基线的分支分离正好恒为零，这是 Corollary 1 的保证。TI-JEPA 同样无记忆，速度符号准确率达到 0.65，对比拥有三倍历史窗口的基线的 0.50。",
-    reacherCap: "在真实 dm_control Reacher 照片上，以官方 ViT-Tiny + AdaLN 规模从零训练。TI-JEPA 的分支分离曲线超过了真实轨迹；同样无记忆的基线始终没有离开地板。2.17 对 0.057，38 倍，是全文最大的差距。",
-    futKicker: "04 · 这件事改变什么",
+    expSub: "选一个环境。每个播放器都是该环境已训练模型上的另一对真实样本：真实轨迹、无记忆基线、TI-JEPA。后两个是真实的官方基准测试，在真实像素上重新训练，不是为这篇论文搭的环境。",
+    pushtTitle: "真实 PushT，在真实像素上重训。",
+    pushtCap: "真实 pymunk 物理，真实像素，两个模型都同样无记忆。基线的分支分离正好恒为零，这是 Corollary 1 的保证。TI-JEPA 的速度符号准确率达到 0.65，对比 0.50——在一个双方都没有记忆优势的公平对比里，分得很开。",
+    reacherTitle: "真实 dm_control Reacher，官方规模。",
+    reacherCap: "在真实 Reacher 照片上，以官方 ViT-Tiny + AdaLN 规模从零训练。TI-JEPA 的分支分离曲线超过了真实轨迹；给了三倍历史窗口的基线依然没有离开地板。2.17 对 0.057，38 倍，是全文最大的差距。",
+    futKicker: "03 · 这件事改变什么",
     futTitle: "世界模型可以被要求停下来。",
     f1t: "预测目标就是状态",
     f1b: "损失预测什么，后面的规划就只能知道什么。下一帧嵌入把速度留在了这个状态外面。位姿和运动一起预测，就把它放回去了。",
@@ -100,8 +96,13 @@ const I18N = {
 };
 
 const ENV_NAME = {
-  en: { pendulum: "Pendulum", cartpole: "CartPole", inertia_ball: "InertiaBall" },
-  zh: { pendulum: "Pendulum", cartpole: "CartPole", inertia_ball: "InertiaBall" },
+  en: { pendulum: "Pendulum", cartpole: "CartPole", inertia_ball: "InertiaBall", pusht_real: "PushT (real)", reacher_real: "Reacher (real)" },
+  zh: { pendulum: "Pendulum", cartpole: "CartPole", inertia_ball: "InertiaBall", pusht_real: "PushT（真实）", reacher_real: "Reacher（真实）" },
+};
+
+const REAL_BENCH = {
+  pusht_real: { gif: "assets/pusht_real_kill_demo.gif", chart: "assets/pusht_real_branch_sep_chart.png", titleKey: "pushtTitle", capKey: "pushtCap" },
+  reacher_real: { gif: "assets/reacher_real_kill_demo.gif", chart: "assets/reacher_real_branch_sep_chart.png", titleKey: "reacherTitle", capKey: "reacherCap" },
 };
 
 let LANG = "en";
@@ -290,9 +291,29 @@ function mountPlayer(host, example) {
   return api;
 }
 
+function mountRealBenchmark(host, id) {
+  const info = REAL_BENCH[id];
+  host.innerHTML = `
+    <div class="panel">
+      <div class="frames">
+        <div class="frame-card"><img class="shot" src="${info.gif}" alt="" /><p class="rb-title"></p></div>
+        <div class="frame-card" style="background:#faf7f1"><img class="shot" src="${info.chart}" alt="" /></div>
+      </div>
+      <p class="note rb-cap"></p>
+    </div>`;
+  function refreshCopy() {
+    host.querySelector(".rb-title").textContent = t(info.titleKey);
+    host.querySelector(".rb-cap").textContent = t(info.capKey);
+  }
+  refreshCopy();
+  const api = { refreshCopy, stop() {} };
+  players.push(api);
+  return api;
+}
+
 function setupPicker() {
   const tabs = document.getElementById("env-tabs");
-  const order = ["pendulum", "cartpole", "inertia_ball"];
+  const order = ["pendulum", "cartpole", "inertia_ball", "pusht_real", "reacher_real"];
   order.forEach((id) => {
     const b = document.createElement("button");
     b.className = "btn";
@@ -304,7 +325,11 @@ function setupPicker() {
       const host = document.getElementById("picker");
       players.slice(1).forEach((p) => p.stop());
       players.length = 1;
-      mountPlayer(host, DATA[id]);
+      if (REAL_BENCH[id]) {
+        mountRealBenchmark(host, id);
+      } else {
+        mountPlayer(host, DATA[id]);
+      }
     });
     tabs.appendChild(b);
   });
