@@ -18,6 +18,7 @@
       <nav class="nav-links">
         <a href="#case" data-i18n="navCase">A real case</a>
         <a href="#experiments" data-i18n="navExp">Experiments</a>
+        <a href="#real-benchmarks" data-i18n="navReal">Real benchmarks</a>
         <a href="#future" data-i18n="navFuture">What follows</a>
       </nav>
       <button class="anon" id="lang" type="button">中文</button>
@@ -56,9 +57,29 @@
       </div>
     </section>
 
+    <section id="real-benchmarks">
+      <div class="wrap">
+        <p class="sec-label" data-i18n="realKicker">03 · Two real benchmarks</p>
+        <h2 data-i18n="realTitle">Nobody built these for this paper.</h2>
+        <p class="sub" data-i18n="realSub">InertiaBall, Pendulum, and CartPole are built so velocity isn't optional. PushT and Reacher are real benchmarks that already have official pretrained checkpoints. We retrained the memoryless baseline and TI-JEPA on real pixels from both, same budget, and reran the exact same kill experiment.</p>
+        <div class="bench-grid">
+          <figure class="figure">
+            <img src="assets/pusht_real_kill_demo.gif" alt="Real PushT, identical frame at t=0, opposite initial velocity" />
+            <img src="assets/pusht_real_branch_sep_chart.png" alt="Real PushT branch-separation chart" style="margin-top:10px" />
+            <figcaption data-i18n="pushtCap">Real pymunk physics, real pixels. The memoryless baseline sits flat at exactly zero branch separation, as Corollary 1 guarantees. TI-JEPA, still memoryless, reaches 0.65 velocity-sign accuracy against 0.50 for a baseline given three times the history.</figcaption>
+          </figure>
+          <figure class="figure">
+            <img src="assets/reacher_real_kill_demo.gif" alt="Real dm_control Reacher, identical frame at t=0, opposite initial joint velocity" />
+            <img src="assets/reacher_real_branch_sep_chart.png" alt="Real Reacher branch-separation chart" style="margin-top:10px" />
+            <figcaption data-i18n="reacherCap">Trained from scratch at official ViT-Tiny + AdaLN scale on real dm_control Reacher photographs. TI-JEPA's branch separation grows past ground truth; the equally-memoryless baseline never leaves the floor. 2.17 vs 0.057 — 38×, the largest margin in the paper.</figcaption>
+          </figure>
+        </div>
+      </div>
+    </section>
+
     <section id="future">
       <div class="wrap">
-        <p class="sec-label" data-i18n="futKicker">03 · What this changes</p>
+        <p class="sec-label" data-i18n="futKicker">04 · What this changes</p>
         <h2 data-i18n="futTitle">A world model can be asked to stop.</h2>
         <div class="cards">
           <article class="card">
