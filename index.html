@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>TI-JEPA · A still frame has no velocity</title>
+  <meta name="description" content="A single-frame JEPA target cannot carry instantaneous velocity. TI-JEPA splits the latent into a pose code and an explicit motion code." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif&family=Noto+Sans+SC:wght@400;500;600&family=Noto+Serif+SC:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect fill='%23101216' width='32' height='32' rx='6'/%3E%3Ccircle cx='20' cy='18' r='4' fill='%23e7b008'/%3E%3Cpath d='M10 8 L20 18' stroke='%23d7dde4' stroke-width='2'/%3E%3C/svg%3E" />
+</head>
+<body>
+  <header class="nav">
+    <div class="wrap nav-inner">
+      <a class="brand" href="#top">TI<span>-</span>JEPA</a>
+      <nav class="nav-links">
+        <a href="#case" data-i18n="navCase">A real case</a>
+        <a href="#experiments" data-i18n="navExp">Experiments</a>
+        <a href="#future" data-i18n="navFuture">What follows</a>
+      </nav>
+      <button class="anon" id="lang" type="button">中文</button>
+    </div>
+  </header>
+
+  <main id="top">
+    <div class="wrap hero">
+      <p class="kicker" data-i18n="kicker">TI-JEPA · world models</p>
+      <h1 data-i18n="h1">A still frame<br />has no velocity.</h1>
+      <p class="lede" data-i18n="lede">A next-frame JEPA predicts the embedding of the next frame from the current embedding and the action. A renderer without motion blur draws configuration only. The embedding of one frame is a function of configuration, so no encoder, however large, can read instantaneous velocity out of it. TI-JEPA makes one small, checkable change: split the latent into a pose code and an explicit motion code, and predict both.</p>
+      <div class="stats">
+        <div class="stat"><b>55%</b><span data-i18n="s1">Lower closed-loop distance on Pendulum<br />p = 3.2×10⁻¹⁰</span></div>
+        <div class="stat"><b>64%</b><span data-i18n="s2">Lower closed-loop distance on CartPole<br />p = 5.1×10⁻¹⁵</span></div>
+        <div class="stat"><b>0</b><span data-i18n="s3">Memoryless branch separation<br />exactly zero in six settings, as the theory requires</span></div>
+        <div class="stat"><b>38×</b><span data-i18n="s4">Branch separation versus a 3-frame history baseline<br />on real Reacher photographs</span></div>
+      </div>
+    </div>
+
+    <section id="case">
+      <div class="wrap">
+        <p class="sec-label" data-i18n="caseKicker">01 · One real case</p>
+        <h2 data-i18n="caseTitle">The same pixels, two real futures.</h2>
+        <p class="sub" data-i18n="caseSub">This is one pair from the trained Pendulum models, the same construction as the paper’s kill experiment. At the first step the two renderings match. The memoryless model then emits one rollout for both. TI-JEPA follows the two directions the physics actually takes.</p>
+        <div id="featured"></div>
+      </div>
+    </section>
+
+    <section id="experiments">
+      <div class="wrap">
+        <p class="sec-label" data-i18n="expKicker">02 · Every environment</p>
+        <h2 data-i18n="expTitle">The same test, three physical systems.</h2>
+        <p class="sub" data-i18n="expSub">Choose an environment. Each player is another real pair from that environment’s trained models: ground truth, the memoryless baseline, and TI-JEPA.</p>
+        <div class="tabs" id="env-tabs" role="tablist"></div>
+        <div id="picker"></div>
+      </div>
+    </section>
+
+    <section id="future">
+      <div class="wrap">
+        <p class="sec-label" data-i18n="futKicker">03 · What this changes</p>
+        <h2 data-i18n="futTitle">A world model can be asked to stop.</h2>
+        <div class="cards">
+          <article class="card">
+            <h3 data-i18n="f1t">The target is the state</h3>
+            <p data-i18n="f1b">Whatever the loss predicts is what later planning is allowed to know. A next-frame embedding leaves velocity outside that state. Pose and motion, predicted together, put it back in.</p>
+          </article>
+          <article class="card">
+            <h3 data-i18n="f2t">Readable, not hidden</h3>
+            <p data-i18n="f2b">The motion code is a bias-free finite difference. Identical frames give exactly zero. A probe can read pose and speed separately, and a planner can ask for arrival with no leftover speed.</p>
+          </article>
+          <article class="card">
+            <h3 data-i18n="f3t">The next world models</h3>
+            <p data-i18n="f3b">Control that catches, swings, or comes to rest needs the rate of change in the object being predicted. That is a change to the target, and it travels with any encoder large enough to see the scene.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="wrap" data-i18n="foot">Code: <a href="https://github.com/OliverZ-dot/TI-JEPA">github.com/OliverZ-dot/TI-JEPA</a>. The players replay real model rollouts. The headline numbers are the paper's aggregate results.</div>
+  </footer>
+  <script src="site.js"></script>
+</body>
+</html>
