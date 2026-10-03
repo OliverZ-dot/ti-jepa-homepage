@@ -180,32 +180,104 @@ function mountPlayer(host, example) {
   const plusImgs = example.plus.map((src) => Object.assign(new Image(), { src }));
   const minusImgs = example.minus.map((src) => Object.assign(new Image(), { src }));
 
+  // Pick a "nice" tick step (1/2/5 * 10^k) so axis labels look hand-chosen
+  // like a matplotlib MaxNLocator, instead of ugly repeating decimals.
+  function niceStep(range, targetTicks) {
+    const raw = range / Math.max(1, targetTicks);
+    const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+    const norm = raw / mag;
+    const step = norm < 1.5 ? 1 : norm < 3 ? 2 : norm < 7 ? 5 : 10;
+    return step * mag;
+  }
+
   function drawChart() {
     const canvas = q("canvas.chart");
     const w = Math.max(2, canvas.clientWidth || 640);
     const h = 240;
-    canvas.width = w;
-    canvas.height = h;
+    // Render at native device resolution so lines/text are crisp (not
+    // blurry/aliased) on retina-class displays -- this, plus proper line
+    // joins and real tick labels below, is almost the entire gap vs. the
+    // paper's matplotlib figures. The underlying numbers/curve shape are
+    // identical either way: paper figures also just draw straight segments
+    // between these same real per-step values (see scripts/make_pretty_kill_
+    // figure.py's `ax.plot(steps, y, ...)` -- no spline/smoothing there),
+    // the "beauty" gap is rendering fidelity, not data.
+    // Only the backing-store resolution changes here (canvas.width/height);
+    // the CSS display size (width:100%, height:240px) stays untouched so
+    // the chart keeps resizing responsively on window resize.
+    const dpr = Math.min(window.devicePixelRatio || 1, 3);
+    canvas.width = Math.round(w * dpr);
+    canvas.height = Math.round(h * dpr);
     const ctx = canvas.getContext("2d");
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
     ctx.fillStyle = "#faf7f1";
     ctx.fillRect(0, 0, w, h);
+    ctx.lineJoin = "round";
+    ctx.lineCap = "round";
+
     const series = [example.gt_plus, example.gt_minus, example.base_plus, example.ti_plus, example.ti_minus];
-    let ymin = Math.min(...series.flat()) - 0.15;
-    let ymax = Math.max(...series.flat()) + 0.15;
-    const pad = { l: 36, r: 12, t: 16, b: 28 };
+    const flat = series.flat();
+    const dataMin = Math.min(...flat);
+    const dataMax = Math.max(...flat);
+    const padFrac = (dataMax - dataMin) * 0.12 || 0.1;
+    const ymin = dataMin - padFrac;
+    const ymax = dataMax + padFrac;
+    const pad = { l: 42, r: 14, t: 14, b: 30 };
     const n = example.gt_plus.length;
     const X = (k) => pad.l + (k / (n - 1)) * (w - pad.l - pad.r);
     const Y = (v) => pad.t + (1 - (v - ymin) / (ymax - ymin)) * (h - pad.t - pad.b);
-    ctx.strokeStyle = "#e4dccb";
-    ctx.beginPath();
-    ctx.moveTo(pad.l, pad.t);
-    ctx.lineTo(pad.l, h - pad.b);
-    ctx.lineTo(w - pad.r, h - pad.b);
-    ctx.stroke();
+
+    // light horizontal gridlines at nice y-values (matches the paper's
+    // grid(alpha=0.25) look) + numeric tick labels on both axes.
+    const yStep = niceStep(ymax - ymin, 5);
+    const yTickStart = Math.ceil(ymin / yStep) * yStep;
+    ctx.font = "11px Georgia, 'Times New Roman', serif";
     ctx.fillStyle = "#8a8376";
-    ctx.font = "12px sans-serif";
-    ctx.fillText(t("angle"), 4, 14);
-    ctx.fillText(t("step"), w - 36, h - 8);
+    ctx.strokeStyle = "#e4dccb";
+    ctx.lineWidth = 1;
+    for (let v = yTickStart; v <= ymax; v += yStep) {
+      const y = Y(v);
+      ctx.beginPath();
+      ctx.moveTo(pad.l, y);
+      ctx.lineTo(w - pad.r, y);
+      ctx.stroke();
+      ctx.textAlign = "right";
+      ctx.textBaseline = "middle";
+      ctx.fillText(v.toFixed(Math.abs(yStep) < 1 ? 2 : 0), pad.l - 6, y);
+    }
+    const xStep = Math.max(1, Math.round(niceStep(n - 1, 6)));
+    ctx.textAlign = "center";
+    ctx.textBaseline = "top";
+    for (let k = 0; k <= n - 1; k += xStep) {
+      const x = X(k);
+      ctx.beginPath();
+      ctx.strokeStyle = "#e4dccb";
+      ctx.moveTo(x, pad.t);
+      ctx.lineTo(x, h - pad.b);
+      ctx.stroke();
+      ctx.fillStyle = "#8a8376";
+      ctx.fillText(String(k), x, h - pad.b + 6);
+    }
+
+    // frame
+    ctx.strokeStyle = "#c9bfa6";
+    ctx.lineWidth = 1.1;
+    ctx.strokeRect(pad.l, pad.t, w - pad.l - pad.r, h - pad.t - pad.b);
+
+    ctx.save();
+    ctx.translate(12, h / 2);
+    ctx.rotate(-Math.PI / 2);
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
+    ctx.font = "12px Georgia, 'Times New Roman', serif";
+    ctx.fillStyle = "#6b6456";
+    ctx.fillText(t("angle"), 0, 0);
+    ctx.restore();
+    ctx.textAlign = "center";
+    ctx.textBaseline = "alphabetic";
+    ctx.fillText(t("step"), (pad.l + w - pad.r) / 2, h - 4);
+
     function stroke(arr, color, dash) {
       ctx.save();
       ctx.beginPath();
@@ -216,23 +288,26 @@ function mountPlayer(host, example) {
         else ctx.lineTo(x, y);
       }
       ctx.strokeStyle = color;
-      ctx.lineWidth = 2.2;
+      ctx.lineWidth = 2.4;
       ctx.setLineDash(dash);
       ctx.stroke();
       ctx.restore();
     }
     stroke(example.gt_plus, "#1a1a1a", []);
-    stroke(example.gt_minus, "#1a1a1a", [4, 3]);
+    stroke(example.gt_minus, "#1a1a1a", [5, 4]);
     stroke(example.base_plus, "#a33b32", []);
     stroke(example.ti_plus, "#1c4f8a", []);
-    stroke(example.ti_minus, "#1c4f8a", [4, 3]);
+    stroke(example.ti_minus, "#1c4f8a", [5, 4]);
+
+    ctx.save();
     ctx.strokeStyle = "#a56b12";
+    ctx.lineWidth = 1.3;
     ctx.setLineDash([2, 3]);
     ctx.beginPath();
     ctx.moveTo(X(state.frame), pad.t);
     ctx.lineTo(X(state.frame), h - pad.b);
     ctx.stroke();
-    ctx.setLineDash([]);
+    ctx.restore();
   }
 
   function render() {
