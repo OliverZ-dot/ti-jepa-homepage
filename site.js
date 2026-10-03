@@ -96,8 +96,8 @@ const I18N = {
 };
 
 const ENV_NAME = {
-  en: { pendulum: "Pendulum", cartpole: "CartPole", inertia_ball: "InertiaBall", pusht_real: "PushT (real)", reacher_real: "Reacher (real)" },
-  zh: { pendulum: "Pendulum", cartpole: "CartPole", inertia_ball: "InertiaBall", pusht_real: "PushT（真实）", reacher_real: "Reacher（真实）" },
+  en: { pendulum: "Pendulum", cartpole: "CartPole", inertia_ball: "InertiaBall", pusht_real: "PushT", reacher_real: "Reacher" },
+  zh: { pendulum: "Pendulum", cartpole: "CartPole", inertia_ball: "InertiaBall", pusht_real: "PushT", reacher_real: "Reacher" },
 };
 
 const REAL_BENCH = {
